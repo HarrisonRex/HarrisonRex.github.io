@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Harrison's Crap</title>
+    <link rel="shortbut icon" type="image/png" href="http://icons.iconarchive.com/icons/jen/animal/16/Duck-icon.png">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+
+    <!-- Main section script -->
+    <script>
+        function load() {
+            can();
+            $("body").css("background-color", "#E5AEC9");
+        }
+        function can(){
+            let ca = $('input[name=tung]:checked').val();
+            if(ca=="lG") {
+                $("#logiC").show(1000);
+                $("#basCon").hide(1000);
+                $("#Hexy").hide(1000);
+            }else if(ca=="bC"){
+                $("#basCon").show(1000);
+                $("#logiC").hide(1000);
+                $("#Hexy").hide(1000);
+            }else if(ca=="hExu") {
+                $("#Hexy").show(1000);
+                $("#logiC").hide(1000);
+                $("#basCon").hide(1000);
+            }else{
+                $("#Hexy").hide(1000);
+                $("#logiC").hide(1000);
+                $("#basCon").hide(1000);
+            }
+        }
+    </script>
+
+    <!-- Logic Gates Script -->
+    <script>
+        function inputCheck(){
+            _A = document.getElementById("ina");
+            _B = document.getElementById("inb");
+            A = _A.options[_A.selectedIndex].value;
+            B = _B.options[_B.selectedIndex].value;
+        }
+        function changeImg() {
+            if (document.getElementById("and").checked) {
+                document.getElementById("gate").src = "http://www.ee.surrey.ac.uk/Projects/CAL/digital-logic/gatesfunc/graphics/AND.gif";
+            } else if (document.getElementById("or").checked) {
+                document.getElementById("gate").src = "http://www.ee.surrey.ac.uk/Projects/CAL/digital-logic/gatesfunc/graphics/OR.gif";
+            } else if (document.getElementById("xor").checked) {
+                document.getElementById("gate").src = "http://www.ee.surrey.ac.uk/Projects/CAL/digital-logic/gatesfunc/graphics/EOR.gif";
+            } else if (document.getElementById("nand").checked) {
+                document.getElementById("gate").src = "http://www.ee.surrey.ac.uk/Projects/CAL/digital-logic/gatesfunc/graphics/NAND.gif";
+            } else if (document.getElementById("nor").checked) {
+                document.getElementById("gate").src = "http://www.ee.surrey.ac.uk/Projects/CAL/digital-logic/gatesfunc/graphics/NOR.gif";
+            }}
+        function Choice(){
+            changeImg();
+            inputCheck();
+            let X = 0;
+            if (document.getElementById("and").checked) {
+                X = ANDgate();
+            } else if (document.getElementById("or").checked) {
+                X = ORgate();
+            } else if (document.getElementById("xor").checked) {
+                X = XORgate();
+            } else if (document.getElementById("nand").checked) {
+                X = NANDgate();
+            } else if (document.getElementById("nor").checked) {
+                X = NORgate();
+            }
+//window.alert(X);
+            document.getElementById("Ans").innerHTML=X;
+            return false;
+        }
+        function ANDgate(){
+            if(A==1 && B==1){
+                return 1;
+            }else{
+                return 0;
+            }}
+        function ORgate(){
+            if(A==1 || B==1){
+                return 1;
+            }else{
+                return 0;
+            }}
+        function XORgate(){
+            if(A==1 && B==1){
+                return 0;
+            }else if(A==1 && B==0){
+                return 1;
+            }else if(A==0 && B==1){
+                return 1;
+            }else{
+                return 0;
+            }}
+        function NANDgate(){
+            if(A==1 && B==1){
+                return 0;
+            }else{
+                return 1;
+            }}
+        function NORgate(){
+            if(A==1 || B==1){
+                return 0;
+            }else{
+                return 1;
+            }}
+    </script>
+
+    <!-- Base Convertion Scripts -->
+    <!-- Code to change and get the bases, input, and output -->
+    <script>
+        //Gets the currently chosen base
+        function getBase(){
+//            return $("input[type=radio][name=bas]:checked").val();
+            return $( "#from" ).val();
+        }
+
+        //Gets the base to convert too
+        function getBase2() {
+            return $( "#to" ).val();
+        }
+
+        //Gets the input from the text box
+        function getInput(){
+            return document.getElementById('in').value ;
+        }
+
+        //Swaps the input to the output
+        function main() {
+            document.getElementById('in').value=(convert(getBase(),getBase2(),getInput()));
+        }
+
+        //To chose what conversion needs to be made
+        function convert(Bas,Bas2, I) {
+            if(Bas=="denary"){
+                if(Bas2=="binary"){
+                    return DToB(I);
+                }else if(Bas2=="hexadecimal"){
+                    return DToH(I);
+                }else{
+                    return I;
+                }
+            }else if(Bas=="binary"){
+                if(Bas2=="denary"){
+                    return BToD(I);
+                }else if(Bas2=="hexadecimal"){
+                    return DToH(BToD(I));
+                }else{
+                    return I;
+                }
+            }else if(Bas=="hexadecimal"){
+                if(Bas2=="denary"){
+                    return HToD(I);
+                }else if(Bas2=="binary"){
+                    return DToB(HToD(I));
+                }else{
+                    return I;
+                }
+            }
+        }
+    </script>
+    <!-- Scripts to convert from one base to another -->
+    <script>
+        function DToH(I) {
+            I = parseInt(I, 10);
+            if (!isNaN(I)) {
+                hexChars = "0123456789ABCDEF";
+                if (I > 255) {
+                    return "Out of Range";
+                }
+                var i = I % 16;
+                var j = (I - i) / 16;
+                result = hexChars.charAt(j) + hexChars.charAt(i);
+                return result;
+            } else {
+                return NaN;
+            }
+        }
+        function DToB(I) {
+            return (I >>> 0).toString(2);
+        }
+        function BToD(I){
+            return I.split('').reverse().reduce(function(x, y, i){
+                return (y === '1') ? x + Math.pow(2, i) : x;
+            }, 0);
+        }
+        function HToD(I) {
+            let digits = "0123456789ABCDEF";
+            I = I.toUpperCase();
+            let val = 0;
+            for (let i = 0; i < I.length; i++) {
+                let c = I.charAt(i);
+                let d = digits.indexOf(c);
+                val = 16*val + d;
+            }
+            return val;
+        }
+    </script>
+
+    <!-- Hex Colour Picker Code -->
+    <script>
+        function HexY() {
+            // make variables to get the values from the sliders
+            var rd = parseInt(document.getElementById('red').value);
+            var gn = parseInt(document.getElementById('green').value);
+            var bl = parseInt(document.getElementById('blue').value);
+
+            // convert the decimal values into hexadecimal
+            var rdhex = (rd < 16) ? "0" + rd.toString(16) : rd.toString(16);
+            var gnhex = (gn < 16) ? "0" + gn.toString(16) : gn.toString(16);
+            var blhex = (bl < 16) ? "0" + bl.toString(16) : bl.toString(16);
+
+            $("#rdVal").text(rd + "/255, " + rdhex.toUpperCase() +"/FF");
+            $("#gnVal").text(gn + "/255, " + gnhex.toUpperCase() +"/FF");
+            $("#blVal").text(bl + "/255, " + blhex.toUpperCase() +"/FF");
+
+            // create a variable that concatenates all the parts
+            var hexcode = "#" + rdhex + gnhex + blhex;
+
+            // change the background color
+            document.body.style.backgroundColor = hexcode;
+            document.getElementById('hexBacDisplay').innerHTML = hexcode.toUpperCase();
+        }
+    </script>
+
+</head>
+<body onload="load()">
+
+<!-- Selection Methods and main part -->
+<form>
+    <label>
+        <input type="radio" name="tung" value="lG" onchange="can()"/>Logic Gates
+    </label>
+    <label>
+        <input type="radio" name="tung" value="bC" onchange="can()"/>Bas Convert
+    </label>
+    <label>
+        <input type="radio" name="tung" value="hExu" onchange="can()"/>Hex Colors
+    </label>
+    <label>
+        <input type="radio" name="tung" value="nun" onchange="can(" checked="checked"/>Clear
+    </label>
+</form>
+
+<!-- Logic Gates -->
+<div id="logiC">
+    <center>
+        <h1>Computer Science Revision (Logic Gates)</h1>
+        <h2> Please select a logic gate and this website will automatically give your output depending on what you have chosen, and what was input.</h2>
+        <form>
+            <label><b>Select A Logic Gate</b></label><p>
+            <input type="radio" id="and" name="gate" value="AND" onClick="Choice()" checked="checked"> AND Gate <p>
+            <input type="radio" id="or" name="gate" value="OR" onClick="Choice()"> OR Gate                      <p>
+            <input type="radio" id="xor" name="gate" value="XOR" onClick="Choice()"> EXOR Gate                  <p>
+            <input type="radio" id="nand" name="gate" value="NAND" onClick="Choice()"> NAND Gate                <p>
+            <input type="radio" id="nor" name="gate" value="NOR" onClick="Choice()"> NOR Gate                   <p>
+        </form>
+        Input A:
+        <form>
+            <select id="ina" name="ina" onChange="Choice()">
+                <option value="0">0</option>
+                <option value="1">1</option>
+            </select>
+        </form>
+        Input B:
+        <form>
+            <select id="inb" name="inb" onChange="Choice()">
+                <option value="0">0</option>
+                <option value="1">1</option>
+            </select>
+        </form>
+        <p></p>
+        A Picture of the Selected Logic Gate:
+        <p></p>
+        <img id="gate" src="http://www.ee.surrey.ac.uk/Projects/CAL/digital-logic/gatesfunc/graphics/AND.gif" height="66" />
+        <p></p>
+        <div>
+            Your Output is:
+            <p id="Ans">0</p>
+        </div>
+    </center>
+</div>
+
+<!-- Base Conversion -->
+<div id="basCon">
+    <center><div name="inputs" id="inputs" >
+        <h1>Base Conversion System</h1>
+        <form>
+            Base System:
+            <div>
+
+                <!-- Selection for the bases, hopefully will be one selection at some point -->
+                <select id="from">
+                    <option value="denary">Denary</option>
+                    <option value="binary">Binary</option>
+                    <option value="hexadecimal">Hexadecimal</option>
+                </select>
+                <select id="to">
+                    <option value="denary">Denary</option>
+                    <option value="binary">Binary</option>
+                    <option value="hexadecimal">Hexadecimal</option>
+                </select>
+            </div>
+        </form>
+
+        <!-- Input will be based off the numbering system chosen -->
+        <!-- Output is changed by the code in the script(in the head) -->
+        <div>Input/Output (based of system chosen, enter to change it) Less than 255 please:</div>
+        <input type="text" name="in" id="in" onchange="main()"/>
+    </div>
+    </center>
+</div>
+
+<!-- Hex Color Pickers -->
+<div id="Hexy">
+    <center>
+        <h1>Background Color Sliders</h1>
+        <h2 id="hexBacDisplay">#E5AEC9</h2>
+
+        <div data-role="content" id="Hmain">
+            <div>
+                <label for="red">
+                    Red
+                </label>
+                <input id="red" type="range" min="0" max="255" value="229" step ="1" onchange = "HexY()" />
+            </div>
+            <div id="rdVal">
+                229/255, E5/FF
+            </div>
+            <div>
+                <label for="green">
+                    Green
+                </label>
+                <input id="green" type="range" min="0" max="255" value="174" step="1" onchange = "HexY()" />
+            </div>
+            <div id="gnVal">
+                174/255, AE/FF
+            </div>
+            <div>
+                <label for="blue">
+                    Blue
+                </label>
+                <input id="blue" type="range" min="0" max="255" value="201" step="1" onchange = "HexY()" />
+            </div>
+            <div id="blVal">
+                201/255, C9/FF
+            </div>
+        </div>
+    </center>
+</div>
+</body>
+</html>
